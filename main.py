@@ -1,10 +1,13 @@
-from typing import Final
 from telegram import Update, InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import Application, InlineQueryHandler, ContextTypes, CommandHandler
 import uuid
 import re
+from dotenv import load_dotenv
+import os
 
-TOKEN: Final = '8368469324:AAExYSqmNriHRWALHXThQvWoa9CHSlWifiI'
+load_dotenv()
+
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # Commands
 
@@ -83,7 +86,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("help", help_command))
 
     # Error
-    app.add_error_handler(InlineQueryHandler(inline_calculator))
+    app.add_handler(InlineQueryHandler(inline_calculator))
 
     print("Polling...")
     app.run_polling()
