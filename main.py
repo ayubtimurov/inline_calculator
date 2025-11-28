@@ -35,7 +35,7 @@ def safe_calculate(expression: str):
 
     expression = expression.replace(" ", "")
 
-    if not re.match(r"^[\d+\-\*\/\(\)\.]$", expression):
+    if not re.match(r"^[\d+\-\*\/\(\)\.]+$", expression):
         raise ValueError("Invalid charachters")
     return eval(expression)
     
