@@ -1,5 +1,5 @@
 from telegram import Update, InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import Application, InlineQueryHandler, ContextTypes, CommandHandler
+from telegram.ext import Application, InlineQueryHandler, ContextTypes, CommandHandler, MessageHandler, filters
 import uuid
 import re
 from dotenv import load_dotenv
@@ -41,6 +41,7 @@ def safe_calculate(expression: str):
     
 async def inline_calculator(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.inline_query.query
+    print(f"Inline query recieved: {query}")
 
     if not query:
         return
@@ -57,7 +58,7 @@ async def inline_calculator(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     parse_mode='HTML'
                 ),
                 description=f"{query} equals to {result}",
-                thumbnail_url="https://via.placeholder.com/64/0088cc/ffffff?text"
+                thumbnail_url="https://via.placeholder.com/64/0088cc/ffffff?text=📱"
             )
         ]
         await update.inline_query.answer(results, cache_time=1)
@@ -74,6 +75,16 @@ async def inline_calculator(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         ]
         await update.inline_query.answer(results, cache_time=1)
+
+async def hanle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.message.text
+    print(f"Message recieved: {query}")
+
+    try:
+        result = safe_calculate(query)
+        await update.message.reply_text(f"<code>{query}</code> = <b>{result}</b>", parse_mode='HTML')
+    except Exception as e:
+        await update.message.reply_text("Invalid Expression")
 
 
 if __name__ == "__main__":
